@@ -27,6 +27,7 @@ var (
 	oidFriendlyName     = asn1.ObjectIdentifier([]int{1, 2, 840, 113549, 1, 9, 20})
 	oidLocalKeyID       = asn1.ObjectIdentifier([]int{1, 2, 840, 113549, 1, 9, 21})
 	oidMicrosoftCSPName = asn1.ObjectIdentifier([]int{1, 3, 6, 1, 4, 1, 311, 17, 1})
+	oidLocalKeySet      = asn1.ObjectIdentifier([]int{1, 3, 6, 1, 4, 1, 311, 17, 2})
 )
 
 type pfxPdu struct {
@@ -184,6 +185,8 @@ func convertAttribute(attribute *pkcs12Attribute) (key, value string, err error)
 		// This key is chosen to match OpenSSL.
 		key = "Microsoft CSP Name"
 		isString = true
+	case attribute.Id.Equal(oidLocalKeySet):
+		return "LocalKeySet", "", nil
 	default:
 		return "", "", errors.New("pkcs12: unknown attribute with OID " + attribute.Id.String())
 	}
